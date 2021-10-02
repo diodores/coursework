@@ -1,1 +1,4 @@
 vk_api.ipynb
+__pycache__/
+.idea/
+.DS_Store

@@ -4,8 +4,8 @@ from tqdm import trange
 import time
 from loguru import logger
 
-with open('/Users/dmitrijsazin/Desktop/pythonProject/ Token_VK/Token_Vk.txt', 'r') as file:
-    TOKEN = file.read().strip()
+
+TOKEN = '40e478d9421d7667ebdd25504a73e7b6f07ebd03116557756de92334d63d5b59e202bd197c530ec9da02b'
 
 
 class VKUser:
@@ -44,6 +44,12 @@ class VKUser:
             my_list.append(my_dict)
         return my_list
 
+    def upload_l(self, my_list):
+        upload_list = []
+        for file in my_list[-1:-6:-1]:
+            upload_list.append(file)
+        return upload_list
+
 
 class YaD:
     url = 'https://cloud-api.yandex.net/'
@@ -56,17 +62,19 @@ class YaD:
             'Authorization': 'OAuth {}'.format(self.token)
         }
 
-    def _path(self):
+    def _path(self, name):
         url_new = self.url + 'v1/disk/resources'
         headers = {
             'Content-Type': 'application/json',
             'Authorization': 'OAuth {}'.format(self.token)
         }
-        params = {'path': f'Photo id {str(id)}'}
+        params = {'path': name}
         response = requests.put(url=url_new, headers=headers, params=params)
         if response.status_code == 201:
-            print('Created')
-        return f'Photo id {str(id)}'
+            logger.info(f'Создана папка {name}')
+        else:
+            logger.info('Папка с таким названием уже существут')
+        return name
 
     def loader(self, data_list):
         upload_url = self.url + 'v1/disk/resources/upload'
@@ -90,7 +98,8 @@ if __name__ == '__main__':
     token_ya = str(input('Введите токен яндекс диска: ').strip())
     vk = VKUser(TOKEN=TOKEN, user_ids=user_ids)
     ya = YaD(token_ya)
-    result = vk.search_photo()
-    path = ya._path()
+    result = vk.upload_l(vk.search_photo())
+    name = input('Название папки: ')
+    path = ya._path(name)
     ya.loader(result)
     logger.info('Завершенно!')
