@@ -5,7 +5,7 @@ import time
 from loguru import logger
 
 
-TOKEN = '40e478d9421d7667ebdd25504a73e7b6f07ebd03116557756de92334d63d5b59e202bd197c530ec9da02b'
+TOKEN = ' '   #Ввести токен VK
 
 
 class VKUser:
@@ -48,6 +48,7 @@ class VKUser:
         upload_list = []
         for file in my_list[-1:-6:-1]:
             upload_list.append(file)
+        logger.info('Отобаны фото для загузки')
         return upload_list
 
 
